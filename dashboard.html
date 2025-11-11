@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PeaceConnect - Tableau de bord administrateur">
+    <title>PeaceConnect - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">☮</span>
+                <span class="logo-text">PeaceConnect</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li>
+                    <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#projets" class="nav-item" data-section="projets">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <span>Projets</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#utilisateurs" class="nav-item" data-section="utilisateurs">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Utilisateurs</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#temoignages" class="nav-item" data-section="temoignages">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        <span>Témoignages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#statistiques" class="nav-item" data-section="statistiques">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span>Statistiques</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#parametres" class="nav-item" data-section="parametres">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                        </svg>
+                        <span>Paramètres</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="../front-office/index.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Retour au site</span>
+            </a>
+            <a href="#" class="nav-item logout" id="logoutBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-content">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <div class="top-bar-actions">
+                    <button class="icon-btn" aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-avatar" id="userMenuBtn" aria-label="Menu utilisateur">
+                            <span>AD</span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#profil">Mon profil</a>
+                            <a href="#parametres">Paramètres</a>
+                            <a href="#" id="logoutDropdown">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section class="dashboard-section active" id="dashboard">
+            <!-- KPIs Cards -->
+            <div class="kpis-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h3 class="kpi-title">Projets Actifs</h3>
+                        <div class="kpi-icon projects">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiProjects">24</div>
+                    <div class="kpi-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+12% ce mois</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h3 class="kpi-title">Utilisateurs</h3>
+                        <div class="kpi-icon users">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiUsers">1,234</div>
+                    <div class="kpi-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+8% ce mois</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h3 class="kpi-title">Témoignages</h3>
+                        <div class="kpi-icon testimonials">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiTestimonials">156</div>
+                    <div class="kpi-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+5% ce mois</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h3 class="kpi-title">Budget Total</h3>
+                        <div class="kpi-icon budget">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="kpi-value" id="kpiBudget">€125,430</div>
+                    <div class="kpi-change negative">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            <polyline points="17 18 23 18 23 12"/>
+                        </svg>
+                        <span>-3% ce mois</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Évolution des Projets</h3>
+                        <select class="chart-filter" id="projectsChartFilter">
+                            <option value="month">Ce mois</option>
+                            <option value="quarter">Ce trimestre</option>
+                            <option value="year">Cette année</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="projectsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Répartition par Catégorie</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="categoriesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 class="table-title">Activité Récente</h3>
+                    <button class="btn btn-primary" id="refreshTableBtn">Actualiser</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="activityTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Utilisateur</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody">
+                            <!-- Les données seront chargées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projets Section -->
+        <section class="dashboard-section" id="projets">
+            <div class="section-header">
+                <h2>Gestion des Projets</h2>
+                <button class="btn btn-primary" id="addProjectBtn">+ Nouveau Projet</button>
+            </div>
+            <div class="table-card">
+                <div class="table-container">
+                    <table class="data-table" id="projectsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Catégorie</th>
+                                <th>Statut</th>
+                                <th>Budget</th>
+                                <th>Date de début</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectsTableBody">
+                            <!-- Les données seront chargées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Utilisateurs Section -->
+        <section class="dashboard-section" id="utilisateurs">
+            <div class="section-header">
+                <h2>Gestion des Utilisateurs</h2>
+                <button class="btn btn-primary" id="addUserBtn">+ Nouvel Utilisateur</button>
+            </div>
+            <div class="table-card">
+                <div class="table-container">
+                    <table class="data-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Statut</th>
+                                <th>Date d'inscription</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Les données seront chargées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Témoignages Section -->
+        <section class="dashboard-section" id="temoignages">
+            <div class="section-header">
+                <h2>Gestion des Témoignages</h2>
+                <button class="btn btn-primary" id="addTestimonialBtn">+ Nouveau Témoignage</button>
+            </div>
+            <div class="table-card">
+                <div class="table-container">
+                    <table class="data-table" id="testimonialsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Auteur</th>
+                                <th>Rôle</th>
+                                <th>Contenu</th>
+                                <th>Statut</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testimonialsTableBody">
+                            <!-- Les données seront chargées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistiques Section -->
+        <section class="dashboard-section" id="statistiques">
+            <div class="section-header">
+                <h2>Statistiques Détaillées</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Évolution Mensuelle</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="monthlyStatsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Paramètres Section -->
+        <section class="dashboard-section" id="parametres">
+            <div class="section-header">
+                <h2>Paramètres</h2>
+            </div>
+            <div class="settings-card">
+                <h3>Paramètres Généraux</h3>
+                <form class="settings-form" id="settingsForm">
+                    <div class="form-group">
+                        <label for="siteName">Nom du site</label>
+                        <input type="text" id="siteName" name="siteName" value="PeaceConnect">
+                    </div>
+                    <div class="form-group">
+                        <label for="siteEmail">Email de contact</label>
+                        <input type="email" id="siteEmail" name="siteEmail" value="contact@peaceconnect.org">
+                    </div>
+                    <div class="form-group">
+                        <label for="maintenanceMode">Mode maintenance</label>
+                        <label class="switch">
+                            <input type="checkbox" id="maintenanceMode" name="maintenanceMode">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal pour les détails -->
+    <div class="modal" id="detailModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Détails</h2>
+                <button class="modal-close" id="modalClose" aria-label="Fermer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Le contenu sera injecté dynamiquement -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <!-- Les boutons d'action seront injectés dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
