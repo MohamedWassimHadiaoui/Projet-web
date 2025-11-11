@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PeaceConnect - Plateforme de connexion pour la paix et le développement durable">
+    <title>PeaceConnect - Accueil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Sticky avec Navigation -->
+    <header class="header" id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html">
+                            <span class="logo-icon">☮</span>
+                            <span class="logo-text">PeaceConnect</span>
+                        </a>
+                    </div>
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#accueil" class="nav-link active">Accueil</a></li>
+                        <li><a href="#actions" class="nav-link">Actions</a></li>
+                        <li><a href="#temoignages" class="nav-link">Témoignages</a></li>
+                        <li><a href="#odd" class="nav-link">ODD</a></li>
+                        <li><a href="#contact" class="nav-link">Contact</a></li>
+                        <li><a href="../back-office/dashboard.html" class="nav-link btn-login">Connexion</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Connectons-nous pour la Paix</h1>
+                <p class="hero-subtitle">Rejoignez une communauté engagée pour un monde meilleur et durable</p>
+                <div class="hero-buttons">
+                    <a href="#actions" class="btn btn-primary">Découvrir nos actions</a>
+                    <a href="#contact" class="btn btn-secondary">Nous contacter</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Section 4 Cartes d'Action Principales -->
+    <section class="actions-section" id="actions">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Nos Actions Principales</h2>
+                <p class="section-subtitle">Découvrez les domaines d'intervention de PeaceConnect</p>
+            </div>
+            <div class="actions-grid">
+                <div class="action-card">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Éducation & Formation</h3>
+                    <p class="action-description">Programmes éducatifs pour promouvoir la paix et le développement durable dans les communautés.</p>
+                    <a href="#" class="action-link">En savoir plus →</a>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Communauté & Réseau</h3>
+                    <p class="action-description">Création de réseaux solides entre les acteurs engagés pour la paix mondiale.</p>
+                    <a href="#" class="action-link">En savoir plus →</a>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Projets Durables</h3>
+                    <p class="action-description">Initiatives concrètes pour un développement respectueux de l'environnement.</p>
+                    <a href="#" class="action-link">En savoir plus →</a>
+                </div>
+                <div class="action-card">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Aide Humanitaire</h3>
+                    <p class="action-description">Soutien aux populations vulnérables et aux zones en crise.</p>
+                    <a href="#" class="action-link">En savoir plus →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Témoignages (Carrousel) -->
+    <section class="testimonials-section" id="temoignages">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Témoignages</h2>
+                <p class="section-subtitle">Ce que disent nos partenaires et bénéficiaires</p>
+            </div>
+            <div class="testimonials-carousel">
+                <div class="carousel-container" id="carouselContainer">
+                    <div class="testimonial-card active">
+                        <div class="testimonial-content">
+                            <div class="testimonial-quote">"</div>
+                            <p class="testimonial-text">PeaceConnect a transformé notre communauté. Grâce à leurs programmes éducatifs, nous avons pu sensibiliser plus de 500 personnes aux enjeux du développement durable.</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">AM</div>
+                                <div class="author-info">
+                                    <h4 class="author-name">Amina Mohamed</h4>
+                                    <p class="author-role">Directrice, Association pour le Développement</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="testimonial-quote">"</div>
+                            <p class="testimonial-text">L'approche collaborative de PeaceConnect nous a permis de créer un réseau solide avec d'autres organisations. Ensemble, nous avons un impact bien plus grand.</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">JD</div>
+                                <div class="author-info">
+                                    <h4 class="author-name">Jean Dupont</h4>
+                                    <p class="author-role">Coordinateur, Réseau Humanitaire</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="testimonial-quote">"</div>
+                            <p class="testimonial-text">Les projets durables initiés par PeaceConnect ont eu un impact réel sur notre environnement. Nous voyons déjà les résultats positifs dans notre région.</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">SK</div>
+                                <div class="author-info">
+                                    <h4 class="author-name">Sarah Kim</h4>
+                                    <p class="author-role">Responsable Environnement, ONG Green Future</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev" id="prevBtn" aria-label="Témoignage précédent">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                    <button class="carousel-btn next" id="nextBtn" aria-label="Témoignage suivant">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section ODD (Objectifs de Développement Durable) -->
+    <section class="odd-section" id="odd">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Objectifs de Développement Durable</h2>
+                <p class="section-subtitle">PeaceConnect s'engage pour les 17 ODD des Nations Unies</p>
+            </div>
+            <div class="odd-grid" id="oddGrid">
+                <!-- Les ODD seront générés dynamiquement par JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Complet -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <span class="logo-icon">☮</span>
+                        <span class="logo-text">PeaceConnect</span>
+                    </div>
+                    <p class="footer-description">Connectons-nous pour construire un monde de paix et de développement durable.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Liens Rapides</h3>
+                    <ul class="footer-links">
+                        <li><a href="#accueil">Accueil</a></li>
+                        <li><a href="#actions">Nos Actions</a></li>
+                        <li><a href="#temoignages">Témoignages</a></li>
+                        <li><a href="#odd">ODD</a></li>
+                        <li><a href="../back-office/dashboard.html">Espace Admin</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contact</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>123 Rue de la Paix, 75001 Paris, France</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span>+33 1 23 45 67 89</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>contact@peaceconnect.org</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Newsletter</h3>
+                    <p class="footer-newsletter-text">Restez informé de nos dernières actions et initiatives.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Votre email" required aria-label="Email pour newsletter">
+                        <button type="submit" class="btn btn-primary">S'abonner</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PeaceConnect. Tous droits réservés.</p>
+                <div class="footer-legal">
+                    <a href="#">Mentions légales</a>
+                    <a href="#">Politique de confidentialité</a>
+                    <a href="#">CGU</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -1,6 +1,6 @@
 /**
- * PEACECONNECT - BACK OFFICE SCRIPT
- * Gestion du dashboard, graphiques Chart.js, tableaux et modales
+ * PEACECONNECT - FRONT OFFICE SCRIPT
+ * Gestion des interactions et animations
  */
 
 // ============================================
@@ -8,695 +8,344 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    initSidebar();
     initNavigation();
-    initCharts();
-    initTables();
-    initModal();
-    initUserMenu();
-    initSettings();
-    loadDashboardData();
+    initCarousel();
+    initODD();
+    initNewsletter();
+    initScrollEffects();
 });
-
-// ============================================
-// SIDEBAR
-// ============================================
-
-/**
- * Initialise la sidebar avec toggle et responsive
- */
-function initSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mainContent = document.getElementById('mainContent');
-
-    // Toggle sidebar desktop
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-        });
-    }
-
-    // Toggle sidebar mobile
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-        });
-    }
-
-    // Fermer sidebar mobile au clic sur overlay
-    if (mainContent) {
-        mainContent.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-                if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
-    }
-}
 
 // ============================================
 // NAVIGATION
 // ============================================
 
 /**
- * Initialise la navigation entre les sections
+ * Initialise la navigation sticky et le menu mobile
  */
 function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item[data-section]');
-    const sections = document.querySelectorAll('.dashboard-section');
-    const pageTitle = document.getElementById('pageTitle');
+    const header = document.getElementById('header');
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navMenu = document.getElementById('navMenu');
+    const navLinks = document.querySelectorAll('.nav-link');
 
-    navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetSection = this.getAttribute('data-section');
+    // Header sticky avec effet au scroll
+    let lastScroll = 0;
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+    });
 
-            // Mettre à jour les états actifs
-            navItems.forEach(nav => nav.classList.remove('active'));
-            this.classList.add('active');
+    // Toggle menu mobile
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+        });
+    }
 
-            // Afficher la section correspondante
-            sections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === targetSection) {
-                    section.classList.add('active');
-                    
-                    // Mettre à jour le titre de la page
-                    if (pageTitle) {
-                        const sectionNames = {
-                            'dashboard': 'Dashboard',
-                            'projets': 'Projets',
-                            'utilisateurs': 'Utilisateurs',
-                            'temoignages': 'Témoignages',
-                            'statistiques': 'Statistiques',
-                            'parametres': 'Paramètres'
-                        };
-                        pageTitle.textContent = sectionNames[targetSection] || 'Dashboard';
-                    }
-
-                    // Charger les données de la section si nécessaire
-                    loadSectionData(targetSection);
-                }
-            });
-
-            // Fermer la sidebar sur mobile
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('active');
-            }
+    // Fermer le menu mobile au clic sur un lien
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
         });
     });
-}
 
-// ============================================
-// CHARTS (Chart.js)
-// ============================================
-
-let projectsChart = null;
-let categoriesChart = null;
-let monthlyStatsChart = null;
-
-/**
- * Initialise tous les graphiques
- */
-function initCharts() {
-    initProjectsChart();
-    initCategoriesChart();
-    initMonthlyStatsChart();
-}
-
-/**
- * Initialise le graphique d'évolution des projets
- */
-function initProjectsChart() {
-    const ctx = document.getElementById('projectsChart');
-    if (!ctx) return;
-
-    const filter = document.getElementById('projectsChartFilter');
+    // Active le lien de navigation correspondant à la section visible
+    const sections = document.querySelectorAll('section[id]');
     
-    projectsChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-            datasets: [{
-                label: 'Projets créés',
-                data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45],
-                borderColor: '#1e3a8a',
-                backgroundColor: 'rgba(30, 58, 138, 0.1)',
-                tension: 0.4,
-                fill: true
-            }, {
-                label: 'Projets terminés',
-                data: [8, 12, 10, 18, 15, 22, 20, 25, 23, 30, 28, 35],
-                borderColor: '#16a34a',
-                backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
+    function updateActiveNav() {
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
                     }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
+                });
             }
-        }
-    });
-
-    // Mettre à jour le graphique selon le filtre
-    if (filter) {
-        filter.addEventListener('change', function() {
-            // Ici, on pourrait charger de nouvelles données selon le filtre
-            // Pour l'instant, on garde les mêmes données
-            console.log('Filtre changé:', this.value);
         });
     }
+
+    window.addEventListener('scroll', updateActiveNav);
 }
 
-/**
- * Initialise le graphique de répartition par catégorie
- */
-function initCategoriesChart() {
-    const ctx = document.getElementById('categoriesChart');
-    if (!ctx) return;
+// ============================================
+// CARROUSEL TÉMOIGNAGES
+// ============================================
 
-    categoriesChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Éducation', 'Communauté', 'Durabilité', 'Humanitaire'],
-            datasets: [{
-                data: [30, 25, 25, 20],
-                backgroundColor: [
-                    '#1e3a8a',
-                    '#16a34a',
-                    '#3b82f6',
-                    '#f59e0b'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                }
+/**
+ * Initialise le carrousel de témoignages
+ */
+function initCarousel() {
+    const carouselContainer = document.getElementById('carouselContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const carouselDots = document.getElementById('carouselDots');
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
+    
+    if (!carouselContainer || testimonialCards.length === 0) return;
+
+    let currentIndex = 0;
+    const totalCards = testimonialCards.length;
+
+    // Créer les dots de navigation
+    function createDots() {
+        carouselDots.innerHTML = '';
+        for (let i = 0; i < totalCards; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Aller au témoignage ${i + 1}`);
+            dot.addEventListener('click', () => goToSlide(i));
+            carouselDots.appendChild(dot);
+        }
+    }
+
+    // Afficher un slide spécifique
+    function showSlide(index) {
+        testimonialCards.forEach((card, i) => {
+            card.classList.remove('active');
+            if (i === index) {
+                card.classList.add('active');
             }
-        }
+        });
+
+        // Mettre à jour les dots
+        const dots = carouselDots.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+    }
+
+    // Aller à un slide spécifique
+    function goToSlide(index) {
+        currentIndex = index;
+        if (currentIndex < 0) currentIndex = totalCards - 1;
+        if (currentIndex >= totalCards) currentIndex = 0;
+        showSlide(currentIndex);
+    }
+
+    // Slide suivant
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalCards;
+        showSlide(currentIndex);
+    }
+
+    // Slide précédent
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+        showSlide(currentIndex);
+    }
+
+    // Event listeners
+    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+
+    // Navigation au clavier
+    carouselContainer.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
     });
+
+    // Auto-play (optionnel - désactivé par défaut pour l'accessibilité)
+    // let autoPlayInterval = setInterval(nextSlide, 5000);
+    
+    // Pause au survol
+    // carouselContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+    // carouselContainer.addEventListener('mouseleave', () => {
+    //     autoPlayInterval = setInterval(nextSlide, 5000);
+    // });
+
+    // Initialisation
+    createDots();
+    showSlide(0);
 }
 
-/**
- * Initialise le graphique des statistiques mensuelles
- */
-function initMonthlyStatsChart() {
-    const ctx = document.getElementById('monthlyStatsChart');
-    if (!ctx) return;
+// ============================================
+// ODD (Objectifs de Développement Durable)
+// ============================================
 
-    monthlyStatsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-            datasets: [{
-                label: 'Utilisateurs',
-                data: [120, 190, 150, 250, 220, 300],
-                backgroundColor: '#1e3a8a'
-            }, {
-                label: 'Projets',
-                data: [12, 19, 15, 25, 22, 30],
-                backgroundColor: '#16a34a'
-            }, {
-                label: 'Témoignages',
-                data: [8, 12, 10, 18, 15, 22],
-                backgroundColor: '#3b82f6'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
+/**
+ * Initialise la section ODD avec les 17 objectifs
+ */
+function initODD() {
+    const oddGrid = document.getElementById('oddGrid');
+    if (!oddGrid) return;
+
+    // Les 17 ODD des Nations Unies
+    const oddList = [
+        { number: 1, title: 'Pas de pauvreté' },
+        { number: 2, title: 'Faim zéro' },
+        { number: 3, title: 'Bonne santé et bien-être' },
+        { number: 4, title: 'Éducation de qualité' },
+        { number: 5, title: 'Égalité entre les sexes' },
+        { number: 6, title: 'Eau propre et assainissement' },
+        { number: 7, title: 'Énergie propre et d\'un coût abordable' },
+        { number: 8, title: 'Travail décent et croissance économique' },
+        { number: 9, title: 'Industrie, innovation et infrastructure' },
+        { number: 10, title: 'Inégalités réduites' },
+        { number: 11, title: 'Villes et communautés durables' },
+        { number: 12, title: 'Consommation et production responsables' },
+        { number: 13, title: 'Mesures relatives à la lutte contre les changements climatiques' },
+        { number: 14, title: 'Vie aquatique' },
+        { number: 15, title: 'Vie terrestre' },
+        { number: 16, title: 'Paix, justice et institutions efficaces' },
+        { number: 17, title: 'Partenariats pour la réalisation des objectifs' }
+    ];
+
+    // Générer les cartes ODD
+    oddList.forEach(odd => {
+        const card = document.createElement('div');
+        card.className = 'odd-card';
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `ODD ${odd.number}: ${odd.title}`);
+        
+        card.innerHTML = `
+            <div class="odd-number">${odd.number}</div>
+            <div class="odd-title">${odd.title}</div>
+        `;
+
+        // Effet hover et clic
+        card.addEventListener('click', function() {
+            showODDDetails(odd);
+        });
+
+        card.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                showODDDetails(odd);
             }
-        }
-    });
-}
-
-// ============================================
-// TABLES
-// ============================================
-
-/**
- * Initialise les tableaux avec données et interactions
- */
-function initTables() {
-    loadActivityTable();
-    loadProjectsTable();
-    loadUsersTable();
-    loadTestimonialsTable();
-
-    // Bouton d'actualisation
-    const refreshBtn = document.getElementById('refreshTableBtn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', function() {
-            loadActivityTable();
-        });
-    }
-}
-
-/**
- * Charge les données de la table d'activité
- */
-function loadActivityTable() {
-    const tbody = document.getElementById('activityTableBody');
-    if (!tbody) return;
-
-    // Données d'exemple (à remplacer par un appel PHP/MySQL)
-    const activities = [
-        { id: 1, type: 'Projet', description: 'Nouveau projet créé: Éducation pour tous', user: 'Admin', date: '2025-01-10 14:30' },
-        { id: 2, type: 'Utilisateur', description: 'Nouvel utilisateur inscrit', user: 'Système', date: '2025-01-10 13:15' },
-        { id: 3, type: 'Témoignage', description: 'Témoignage approuvé', user: 'Modérateur', date: '2025-01-10 12:00' },
-        { id: 4, type: 'Projet', description: 'Projet mis à jour: Projet Vert', user: 'Admin', date: '2025-01-10 11:45' },
-        { id: 5, type: 'Utilisateur', description: 'Profil utilisateur modifié', user: 'Admin', date: '2025-01-10 10:20' }
-    ];
-
-    tbody.innerHTML = '';
-    activities.forEach(activity => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>#${activity.id}</td>
-            <td><span class="status-badge active">${activity.type}</span></td>
-            <td>${activity.description}</td>
-            <td>${activity.user}</td>
-            <td>${activity.date}</td>
-            <td>
-                <div class="table-actions">
-                    <button class="action-btn view" onclick="showDetails(${activity.id}, 'activity')">Voir</button>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-/**
- * Charge les données de la table des projets
- */
-function loadProjectsTable() {
-    const tbody = document.getElementById('projectsTableBody');
-    if (!tbody) return;
-
-    const projects = [
-        { id: 1, name: 'Éducation pour tous', category: 'Éducation', status: 'Actif', budget: '€15,000', date: '2025-01-01' },
-        { id: 2, name: 'Projet Vert', category: 'Durabilité', status: 'Actif', budget: '€25,000', date: '2024-12-15' },
-        { id: 3, name: 'Aide Humanitaire', category: 'Humanitaire', status: 'En attente', budget: '€30,000', date: '2025-01-05' },
-        { id: 4, name: 'Réseau Communautaire', category: 'Communauté', status: 'Actif', budget: '€10,000', date: '2024-11-20' }
-    ];
-
-    tbody.innerHTML = '';
-    projects.forEach(project => {
-        const row = document.createElement('tr');
-        const statusClass = project.status === 'Actif' ? 'active' : 'pending';
-        row.innerHTML = `
-            <td>#${project.id}</td>
-            <td>${project.name}</td>
-            <td>${project.category}</td>
-            <td><span class="status-badge ${statusClass}">${project.status}</span></td>
-            <td>${project.budget}</td>
-            <td>${project.date}</td>
-            <td>
-                <div class="table-actions">
-                    <button class="action-btn view" onclick="showDetails(${project.id}, 'project')">Voir</button>
-                    <button class="action-btn edit" onclick="editItem(${project.id}, 'project')">Modifier</button>
-                    <button class="action-btn delete" onclick="deleteItem(${project.id}, 'project')">Supprimer</button>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-/**
- * Charge les données de la table des utilisateurs
- */
-function loadUsersTable() {
-    const tbody = document.getElementById('usersTableBody');
-    if (!tbody) return;
-
-    const users = [
-        { id: 1, name: 'Jean Dupont', email: 'jean@example.com', role: 'Admin', status: 'Actif', date: '2024-01-15' },
-        { id: 2, name: 'Marie Martin', email: 'marie@example.com', role: 'Modérateur', status: 'Actif', date: '2024-03-20' },
-        { id: 3, name: 'Pierre Durand', email: 'pierre@example.com', role: 'Utilisateur', status: 'Actif', date: '2024-06-10' },
-        { id: 4, name: 'Sophie Bernard', email: 'sophie@example.com', role: 'Utilisateur', status: 'Inactif', date: '2024-08-05' }
-    ];
-
-    tbody.innerHTML = '';
-    users.forEach(user => {
-        const row = document.createElement('tr');
-        const statusClass = user.status === 'Actif' ? 'active' : 'inactive';
-        row.innerHTML = `
-            <td>#${user.id}</td>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.role}</td>
-            <td><span class="status-badge ${statusClass}">${user.status}</span></td>
-            <td>${user.date}</td>
-            <td>
-                <div class="table-actions">
-                    <button class="action-btn view" onclick="showDetails(${user.id}, 'user')">Voir</button>
-                    <button class="action-btn edit" onclick="editItem(${user.id}, 'user')">Modifier</button>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-/**
- * Charge les données de la table des témoignages
- */
-function loadTestimonialsTable() {
-    const tbody = document.getElementById('testimonialsTableBody');
-    if (!tbody) return;
-
-    const testimonials = [
-        { id: 1, author: 'Amina Mohamed', role: 'Directrice', content: 'PeaceConnect a transformé...', status: 'Approuvé', date: '2025-01-08' },
-        { id: 2, author: 'Jean Dupont', role: 'Coordinateur', content: 'L\'approche collaborative...', status: 'Approuvé', date: '2025-01-05' },
-        { id: 3, author: 'Sarah Kim', role: 'Responsable', content: 'Les projets durables...', status: 'En attente', date: '2025-01-10' }
-    ];
-
-    tbody.innerHTML = '';
-    testimonials.forEach(testimonial => {
-        const row = document.createElement('tr');
-        const statusClass = testimonial.status === 'Approuvé' ? 'active' : 'pending';
-        const shortContent = testimonial.content.length > 50 
-            ? testimonial.content.substring(0, 50) + '...' 
-            : testimonial.content;
-        row.innerHTML = `
-            <td>#${testimonial.id}</td>
-            <td>${testimonial.author}</td>
-            <td>${testimonial.role}</td>
-            <td>${shortContent}</td>
-            <td><span class="status-badge ${statusClass}">${testimonial.status}</span></td>
-            <td>${testimonial.date}</td>
-            <td>
-                <div class="table-actions">
-                    <button class="action-btn view" onclick="showDetails(${testimonial.id}, 'testimonial')">Voir</button>
-                    <button class="action-btn edit" onclick="editItem(${testimonial.id}, 'testimonial')">Modifier</button>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// ============================================
-// MODAL
-// ============================================
-
-/**
- * Initialise le système de modales
- */
-function initModal() {
-    const modal = document.getElementById('detailModal');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalClose = document.getElementById('modalClose');
-
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', closeModal);
-    }
-
-    if (modalClose) {
-        modalClose.addEventListener('click', closeModal);
-    }
-
-    // Fermer avec la touche Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-}
-
-/**
- * Affiche une modale avec les détails d'un élément
- */
-function showDetails(id, type) {
-    const modal = document.getElementById('detailModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const modalFooter = document.getElementById('modalFooter');
-
-    if (!modal || !modalTitle || !modalBody) return;
-
-    // Ici, on pourrait faire un appel PHP pour récupérer les détails
-    // Pour l'instant, on affiche des données d'exemple
-    let title = '';
-    let content = '';
-    let footer = '';
-
-    switch(type) {
-        case 'activity':
-            title = `Activité #${id}`;
-            content = `
-                <p><strong>Type:</strong> Projet</p>
-                <p><strong>Description:</strong> Nouveau projet créé: Éducation pour tous</p>
-                <p><strong>Utilisateur:</strong> Admin</p>
-                <p><strong>Date:</strong> 2025-01-10 14:30</p>
-            `;
-            break;
-        case 'project':
-            title = `Projet #${id}`;
-            content = `
-                <p><strong>Nom:</strong> Éducation pour tous</p>
-                <p><strong>Catégorie:</strong> Éducation</p>
-                <p><strong>Statut:</strong> Actif</p>
-                <p><strong>Budget:</strong> €15,000</p>
-                <p><strong>Date de début:</strong> 2025-01-01</p>
-                <p><strong>Description:</strong> Projet visant à promouvoir l'éducation pour tous dans les communautés défavorisées.</p>
-            `;
-            footer = `
-                <button class="btn btn-secondary" onclick="closeModal()">Fermer</button>
-                <button class="btn btn-primary" onclick="editItem(${id}, 'project')">Modifier</button>
-            `;
-            break;
-        case 'user':
-            title = `Utilisateur #${id}`;
-            content = `
-                <p><strong>Nom:</strong> Jean Dupont</p>
-                <p><strong>Email:</strong> jean@example.com</p>
-                <p><strong>Rôle:</strong> Admin</p>
-                <p><strong>Statut:</strong> Actif</p>
-                <p><strong>Date d'inscription:</strong> 2024-01-15</p>
-            `;
-            footer = `
-                <button class="btn btn-secondary" onclick="closeModal()">Fermer</button>
-                <button class="btn btn-primary" onclick="editItem(${id}, 'user')">Modifier</button>
-            `;
-            break;
-        case 'testimonial':
-            title = `Témoignage #${id}`;
-            content = `
-                <p><strong>Auteur:</strong> Amina Mohamed</p>
-                <p><strong>Rôle:</strong> Directrice, Association pour le Développement</p>
-                <p><strong>Statut:</strong> Approuvé</p>
-                <p><strong>Date:</strong> 2025-01-08</p>
-                <p><strong>Contenu:</strong></p>
-                <p style="font-style: italic; padding: 1rem; background: #f3f4f6; border-radius: 0.5rem;">
-                    "PeaceConnect a transformé notre communauté. Grâce à leurs programmes éducatifs, nous avons pu sensibiliser plus de 500 personnes aux enjeux du développement durable."
-                </p>
-            `;
-            footer = `
-                <button class="btn btn-secondary" onclick="closeModal()">Fermer</button>
-                <button class="btn btn-primary" onclick="editItem(${id}, 'testimonial')">Modifier</button>
-            `;
-            break;
-    }
-
-    modalTitle.textContent = title;
-    modalBody.innerHTML = content;
-    modalFooter.innerHTML = footer || `<button class="btn btn-secondary" onclick="closeModal()">Fermer</button>`;
-    modal.classList.add('active');
-}
-
-/**
- * Ferme la modale
- */
-function closeModal() {
-    const modal = document.getElementById('detailModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-/**
- * Édite un élément (à implémenter)
- */
-function editItem(id, type) {
-    closeModal();
-    console.log(`Édition de ${type} #${id}`);
-    // Ici, on pourrait ouvrir un formulaire d'édition
-    alert(`Fonctionnalité d'édition à implémenter pour ${type} #${id}`);
-}
-
-/**
- * Supprime un élément (à implémenter)
- */
-function deleteItem(id, type) {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer ce ${type} ?`)) {
-        console.log(`Suppression de ${type} #${id}`);
-        // Ici, on pourrait faire un appel PHP pour supprimer
-        alert(`Fonctionnalité de suppression à implémenter pour ${type} #${id}`);
-    }
-}
-
-// ============================================
-// USER MENU
-// ============================================
-
-/**
- * Initialise le menu utilisateur
- */
-function initUserMenu() {
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userDropdown = document.getElementById('userDropdown');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const logoutDropdown = document.getElementById('logoutDropdown');
-
-    if (userMenuBtn && userDropdown) {
-        userMenuBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            userDropdown.classList.toggle('active');
         });
 
-        // Fermer le menu au clic ailleurs
-        document.addEventListener('click', function() {
-            userDropdown.classList.remove('active');
-        });
-    }
+        oddGrid.appendChild(card);
+    });
+}
 
-    // Gestion de la déconnexion
-    function handleLogout() {
-        if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-            // Ici, on pourrait faire un appel PHP pour déconnecter
-            window.location.href = '../front-office/index.html';
-        }
-    }
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
-
-    if (logoutDropdown) {
-        logoutDropdown.addEventListener('click', function(e) {
-            e.preventDefault();
-            handleLogout();
-        });
-    }
+/**
+ * Affiche les détails d'un ODD (peut être étendu avec une modale)
+ */
+function showODDDetails(odd) {
+    // Pour l'instant, on affiche juste une alerte
+    // Dans une version complète, on pourrait ouvrir une modale
+    console.log(`ODD ${odd.number}: ${odd.title}`);
+    // alert(`ODD ${odd.number}: ${odd.title}\n\nDétails à venir...`);
 }
 
 // ============================================
-// SETTINGS
+// NEWSLETTER
 // ============================================
 
 /**
- * Initialise le formulaire de paramètres
+ * Initialise le formulaire de newsletter
  */
-function initSettings() {
-    const settingsForm = document.getElementById('settingsForm');
-    if (!settingsForm) return;
+function initNewsletter() {
+    const newsletterForm = document.getElementById('newsletterForm');
+    if (!newsletterForm) return;
 
-    settingsForm.addEventListener('submit', function(e) {
+    newsletterForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Récupérer les données du formulaire
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData);
-        
-        // Ici, on pourrait envoyer les données à un script PHP
-        console.log('Paramètres à sauvegarder:', data);
-        
-        // Afficher un message de succès
-        alert('Paramètres enregistrés avec succès !');
+        const emailInput = this.querySelector('input[type="email"]');
+        const email = emailInput.value.trim();
+
+        if (validateEmail(email)) {
+            // Ici, on pourrait envoyer les données à un script PHP
+            // Pour l'instant, on simule juste une soumission réussie
+            showNotification('Merci pour votre inscription à la newsletter !', 'success');
+            emailInput.value = '';
+            
+            // Exemple d'appel PHP (à implémenter)
+            // submitNewsletter(email);
+        } else {
+            showNotification('Veuillez entrer une adresse email valide.', 'error');
+        }
     });
 }
 
-// ============================================
-// DATA LOADING
-// ============================================
-
 /**
- * Charge les données du dashboard
+ * Valide une adresse email
  */
-function loadDashboardData() {
-    // Mettre à jour les KPIs (pourrait être fait via PHP/MySQL)
-    updateKPIs();
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
 }
 
 /**
- * Met à jour les KPIs
+ * Affiche une notification
  */
-function updateKPIs() {
-    // Ici, on pourrait faire des appels PHP pour récupérer les vraies données
-    // Pour l'instant, on garde les valeurs statiques du HTML
-    console.log('KPIs chargés');
+function showNotification(message, type = 'success') {
+    // Créer l'élément de notification
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#16a34a' : '#ef4444'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+    `;
+
+    document.body.appendChild(notification);
+
+    // Retirer après 3 secondes
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
 }
 
+// ============================================
+// EFFETS DE SCROLL
+// ============================================
+
 /**
- * Charge les données d'une section spécifique
+ * Initialise les effets d'animation au scroll
  */
-function loadSectionData(section) {
-    switch(section) {
-        case 'projets':
-            loadProjectsTable();
-            break;
-        case 'utilisateurs':
-            loadUsersTable();
-            break;
-        case 'temoignages':
-            loadTestimonialsTable();
-            break;
-        case 'statistiques':
-            // Recharger les graphiques si nécessaire
-            break;
-    }
+function initScrollEffects() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observer les éléments à animer
+    const animatedElements = document.querySelectorAll('.action-card, .testimonial-card, .odd-card');
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
 }
 
 // ============================================
@@ -704,39 +353,55 @@ function loadSectionData(section) {
 // ============================================
 
 /**
- * Exemple de fonction pour charger des données via PHP
+ * Soumet le formulaire de newsletter via PHP (à implémenter)
  */
-function loadDataFromPHP(endpoint, callback) {
+function submitNewsletter(email) {
+    // Exemple d'appel AJAX vers un script PHP
     /*
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', endpoint, true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            if (callback) callback(data);
-        }
-    };
-    xhr.send();
-    */
-}
-
-/**
- * Exemple de fonction pour envoyer des données via PHP
- */
-function sendDataToPHP(endpoint, data, callback) {
-    /*
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', endpoint, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.open('POST', '../api/newsletter.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                if (callback) callback(response);
+                if (response.success) {
+                    showNotification('Merci pour votre inscription !', 'success');
+                } else {
+                    showNotification(response.message || 'Une erreur est survenue.', 'error');
+                }
+            } else {
+                showNotification('Une erreur est survenue.', 'error');
             }
         }
     };
-    xhr.send(JSON.stringify(data));
+    xhr.send('email=' + encodeURIComponent(email));
     */
 }
+
+// Ajouter les animations CSS pour les notifications
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 
